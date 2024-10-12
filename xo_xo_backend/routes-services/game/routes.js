@@ -9,13 +9,15 @@ async function routes(fastify, options) {
       const playerId = request.user.id;
 
       // Fetch the socket ID for the player
-      const playerSocketMapping = await PlayerSocketMap.findOne({ playerId,eStatus:'a' });
+      const playerSocketMapping = await PlayerSocketMap.findOne({ playerId  });
       if (!playerSocketMapping) {
         return reply.code(400).send({ error: 'Player not connected to a socket' });
       }
       const socketId = playerSocketMapping.socketId;
 
+      
       const result = await startGame(playerId);
+
 
       if (fastify.io) {
         const socket = fastify.io.sockets.sockets.get(socketId);
@@ -24,12 +26,17 @@ async function routes(fastify, options) {
         } else {
           console.warn(`Socket with ID ${socketId} not found`);
         }
+
+        const socketsInRoom = await fastify.io.in(result.roomId).fetchSockets();
+        console.log(`Sockets in room ${result.roomId}:`, socketsInRoom.map(s => s.id));
+      
       }
       
       // Send events to other players
       if (result.events && result.events.length > 0) {
         result.events.forEach(event => {
-          fastify.io.to(result.roomId).emit(event.type, event.data);
+          console.log({event},'event');
+          fastify.io.emit(event.type, event.data);
         });
       }
       

@@ -47,12 +47,16 @@ controllers.startGame = async (playerId) => {
     room.game = game._id;
   } else {
     game = await Game.findById(room.game);
+    // Update game players if a new player joined
+    if (isNewPlayer) {
+      game.players = room.players;
+      game.currentTurn = game.players[0]; // Reset current turn to first player
+    }
   }
 
   // Update room and game status
   if (room.players.length === room.maxPlayers) {
     room.status = 'full';
-    game.status = 'in_progress';
   }
 
   await room.save();
@@ -77,6 +81,7 @@ controllers.startGame = async (playerId) => {
       name: playerMap[id.toString()],
       symbol: ['X', 'O'][index] // Assign symbols
     })),
+    board: game.board
   };
 
   // Determine events to emit
@@ -90,19 +95,13 @@ controllers.startGame = async (playerId) => {
         playersJoined: room.players.length 
       }
     });
-  }
-
-  if (game.status === 'in_progress') {
     events.push({
-      type: 'game_start',
-      data: { 
-        gameId: game._id.toString(),
-        players: response.players,
-        currentTurn: game.currentTurn.toString(),
-        board: game.board
-      }
+      type: 'ready_to_start',
+      data: { gameId: game._id.toString() }
     });
   }
+
+ 
 
   // Add events to the response
   response.events = events;
@@ -121,6 +120,7 @@ controllers.makeMove = async (gameId, playerId, move) => {
     throw new Error('Game is not in progress');
   }
 
+  console.log(game.currentTurn.toString() , playerId)
   if (game.currentTurn.toString() !== playerId) {
     throw new Error('Not your turn');
   }
@@ -227,6 +227,24 @@ controllers.createPlayerSocketMapping = () => {
     getPlayerId
   };
 };
+
+controllers.updateGameStatus = async (gameId, status) => {
+  try {
+    const game = await Game.findByIdAndUpdate(
+      gameId,
+      { status: status },
+      { new: true }
+    );
+    if (!game) {
+      throw new Error('Game not found');
+    }
+    return game;
+  } catch (error) {
+    console.error('Error updating game status:', error);
+    throw error;
+  }
+};
+
 
 
 module.exports = controllers;

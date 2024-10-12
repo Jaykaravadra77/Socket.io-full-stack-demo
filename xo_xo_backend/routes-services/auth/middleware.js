@@ -6,6 +6,7 @@ const authMiddleware = async (request, reply) => {
   try {
     console.log(process.env.JWT_SECRET);
     const token = request.headers.authorization ;
+ 
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
     const player = await Player.findById(decoded.id);
     

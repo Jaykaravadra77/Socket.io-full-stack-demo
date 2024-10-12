@@ -3,9 +3,11 @@ import { startGame } from '../../services/api';
 import { initSocket } from '../../services/socket';
 import styles from '../../styles/JoinGame.module.css';
 import { toast } from 'react-toastify';
+import { useNavigate } from 'react-router-dom';
 
 const JoinGame: React.FC = () => {
   const [gameState, setGameState] = useState<any>(null);
+  const navigate = useNavigate();
 
   useEffect(() => {
     const token = localStorage.getItem('token');
@@ -21,6 +23,7 @@ const JoinGame: React.FC = () => {
         const result = await startGame(token);
         setGameState(result);
         toast.success('Successfully joined the game!');
+        navigate(`/game/${result.gameId}`, { state: result });
       } else {
         toast.error('No authentication token found. Please login again.');
       }

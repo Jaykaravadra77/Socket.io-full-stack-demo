@@ -16,11 +16,11 @@ export const login = async (email: string, password: string) => {
 };
 
 export const startGame = async (token: string) => {
-  const response = await fetch('http://localhost:3000/api/game/start', {
+  const response = await fetch('http://localhost:3000/api/game/start-game', {
     method: 'POST',
     headers: {
-      'Content-Type': 'application/json',
-      'Authorization': `Bearer ${token}`,
+      // 'Content-Type': 'application/json',
+      'Authorization': `${token}`,
     },
   });
 

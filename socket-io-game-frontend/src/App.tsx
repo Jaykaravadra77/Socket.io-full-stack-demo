@@ -3,6 +3,7 @@ import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import Layout from './layouts/Layout';
 import Login from './components/auth/Login';
 import JoinGame from './components/game/JoinGame';
+import GamePage from './components/game/GamePage';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
@@ -13,6 +14,7 @@ const App: React.FC = () => {
         <Routes>
           <Route path="/" element={<Login />} />
           <Route path="/join-game" element={<JoinGame />} />
+          <Route path="/game/:gameId" element={<GamePage />} />
         </Routes>
       </Layout>
       <ToastContainer
