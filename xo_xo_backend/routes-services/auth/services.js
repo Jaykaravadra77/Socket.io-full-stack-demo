@@ -21,5 +21,5 @@ exports.loginPlayer = async (email, password) => {
   player.aToken.sToken = token;
   await player.save();
 
-  return { token };
+  return { token , playerId: player._id};
 };

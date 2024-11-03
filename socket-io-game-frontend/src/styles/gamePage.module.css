@@ -66,6 +66,10 @@
   margin-right: 15px;
 }
 
+.cellSymbol {
+  font-size: 1em;  
+}
+
 .cell:last-child {
   margin-right: 0;
 }
@@ -75,16 +79,6 @@
 }
  
  
-
-.cell::after {
-  content: attr(data-symbol);
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  font-size: 2em;
-  font-weight: bold;
-}
 
 .divider {
   width: 100%;

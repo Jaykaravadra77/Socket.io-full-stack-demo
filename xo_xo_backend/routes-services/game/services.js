@@ -120,7 +120,7 @@ controllers.makeMove = async (gameId, playerId, move) => {
     throw new Error('Game is not in progress');
   }
 
-  console.log(game.currentTurn.toString() , playerId)
+
   if (game.currentTurn.toString() !== playerId) {
     throw new Error('Not your turn');
   }
@@ -130,7 +130,7 @@ controllers.makeMove = async (gameId, playerId, move) => {
   }
 
   const playerIndex = game.players.findIndex(p => p.toString() === playerId);
-  const playerSymbol = ['X', 'O', 'Z'][playerIndex];
+  const playerSymbol = ['X', 'O'][playerIndex];
   game.board[move.row][move.col] = playerSymbol;
 
   game.moves.push({

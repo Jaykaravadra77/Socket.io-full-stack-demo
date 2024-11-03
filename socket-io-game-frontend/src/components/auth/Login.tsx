@@ -12,8 +12,9 @@ const Login: React.FC = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
-      const { token } = await login(email, password);
+      const { token ,playerId} = await login(email, password);
       localStorage.setItem('token', token);
+      localStorage.setItem('userId', playerId);
       toast.success('Login successful!');
       navigate('/join-game');
     } catch (error) {
